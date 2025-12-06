@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-`include "include/data_type.svh"
+`include "../include/data_type.svh"
 `include "delay_n.sv"
 `include "phi_sum.sv"
 `include "gamma_sum.sv"
@@ -46,6 +46,7 @@ wire gamma_sum_valid;
 
 // phi_rho output
 wire phi_t phi_rho;
+wire phi_rho_valid;
 
 // mag output
 wire mag_t mag_out;
@@ -68,8 +69,8 @@ wire eps_t  eps_out;
 wire select_eps_valid;
 
 // buf output
-wire ang_t angle_buf;
-wire [7:0] write_ptr;
+wire ang_t angle_buf [255:0];
+wire [7:0] write_ptr  ;
 wire buf_valid;
 
 // ---- 計算拉高 out_valid 的時機 ----
@@ -175,7 +176,7 @@ angle u_angle(
     .gamma_in_real(gamma_out_real),
     .gamma_in_imag(gamma_out_imag),
     .angle_valid(angle_valid),  //out
-    .angle_out(ang_out)
+    .ang_out(ang_out)
 );
 
 mag u_mag(
@@ -197,7 +198,7 @@ argmax u_argmax(
     .theta_out(theta_out)
 );
 
-buf u_buf(
+buff u_buf(
     .clk(clk),
     .rst(rst),
     .angle_valid(angle_valid),  //in

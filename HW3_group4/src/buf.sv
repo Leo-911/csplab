@@ -1,8 +1,8 @@
 `timescale 1ns/1ps
-`include "include/data_type.svh"
+`include "../include/data_type.svh"
 
 // 循環 buffer，保存最近 256 個角度
-module buf (
+module buff (
     input  logic        clk,
     input  logic        rst,          // active-high reset
     input  logic        angle_valid,  // 新增：輸入有效

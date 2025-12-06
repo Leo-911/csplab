@@ -1,0 +1,14 @@
+# build & simulation
+build/
+sim
+simv.daidir/
+*.fsdb
+novas_dump.log
+ucli.key
+csrc/
+
+# editor / system
+*.swp
+*.tmp
+.DS_Store
+

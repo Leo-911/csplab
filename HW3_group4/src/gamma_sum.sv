@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-`include "include/data_type.svh"
+`include "../include/data_type.svh"
 
 module gamma_sum(
     input           clk,
@@ -26,16 +26,16 @@ integer i;
 // Register Definitions
 // ------------------------------------------------------
 // Shift registers (Delay Line)
-reg gamma_t delay_line_real[0:L-1];
-reg gamma_t delay_line_imag[0:L-1];
+gamma_t delay_line_real[0:L-1];
+gamma_t delay_line_imag[0:L-1];
 
 // Product (Current term)
-reg gamma_t product_real;
-reg gamma_t product_imag;
+gamma_t product_real;
+gamma_t product_imag;
 
 // Accumulator (Output Buffer)
-reg gamma_t gamma_out_real_buf;
-reg gamma_t gamma_out_imag_buf;
+gamma_t gamma_out_real_buf;
+gamma_t gamma_out_imag_buf;
 
 assign gamma_out_real = gamma_out_real_buf;
 assign gamma_out_imag = gamma_out_imag_buf;

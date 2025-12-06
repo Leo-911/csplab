@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-`include "include/data_type.svh"
+`include "../include/data_type.svh"
 
 module phi_rho (
     input           clk,

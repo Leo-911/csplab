@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-`include "include/data_type.svh"
+`include "../include/data_type.svh"
 
 module argmax (
     input  logic    clk,
@@ -63,7 +63,7 @@ module argmax (
                 always_ff @(posedge clk or posedge rst) begin
                     if (rst) begin
                         // Reset to minimum value and logic 0 index
-                        stages[level+1][k].val <= 16'sd-32768; // 16-bit signed 最小值
+                        stages[level+1][k].val <=  -16'sd32768; // 16-bit signed 最小值
                         stages[level+1][k].idx <= 8'd0;
                     end else begin
                         // 比較相鄰兩個元素 (2*k 和 2*k+1)

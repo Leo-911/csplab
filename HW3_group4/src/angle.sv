@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-`include "include/data_type.svh"
+`include "../include/data_type.svh"
 // typedef logic signed [15:0] gamma_t;
 // typedef logic signed [12:0] ang_t;
 
@@ -18,7 +18,7 @@ module angle (
     // ------------------------------------------------------------
     localparam int ITERS   = 8;     // cordic iterations
     localparam int F_ANG   = 10;    // ang_t 小數位
-    localparam int DLY     = 9;     // 延遲 9 拍（對應 delay line 長度）
+    localparam int DLY     = 8;     // 延遲 9 拍（對應 delay line 長度）
 
     // π/2 ≈ 1.5708 → ×1024 ≈ 1608
     localparam ang_t HALF_PI     = ang_t'(13'sd1608);
@@ -47,6 +47,7 @@ module angle (
     gamma_t y_iter[0:ITERS];
     ang_t   z_iter[0:ITERS];
 
+    int i;
     ang_t   ang_now;      // 這一拍算出的 angle（還沒進延遲線）
 
     // ------------------------------------------------------------
@@ -79,7 +80,7 @@ module angle (
         z_iter[0] = z_q;
 
         // CORDIC 迭代 (8 stages, purely combinational)
-        for (int i = 0; i < ITERS; i++) begin
+        for ( i = 0; i < ITERS; i++) begin
             logic signed [15:0] x_shift = x_iter[i] >>> i;
             logic signed [15:0] y_shift = y_iter[i] >>> i;
 
@@ -106,7 +107,7 @@ module angle (
 
     always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
-            for (int i = 0; i < DLY; i++) begin
+            for (int  i = 0; i < DLY; i++) begin
                 dly_reg[i]    <= '0;
             end
             valid_shift <= '0;

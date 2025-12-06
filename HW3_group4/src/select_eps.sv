@@ -1,4 +1,6 @@
-`include "include/data_type.svh"
+
+`timescale 1ns/1ps
+`include "../include/data_type.svh"
 
 // 純組合電路，讀 buffer 計算 eps
 module select_eps (

@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-`include "include/data_type.svh"
+`include "../include/data_type.svh"
 module delay_n #(
     parameter N = 256
 ) (
@@ -23,14 +23,14 @@ module delay_n #(
 );
 
     // 移位暫存器 (Delay Line)
-    reg r_t delay_line_real [0:N-1];
-    reg r_t delay_line_imag [0:N-1];
+    r_t delay_line_real [0:N-1];
+    r_t delay_line_imag [0:N-1];
 
     // 輸出緩衝器 (Output Buffers)
-    reg r_t r_real_buf;
-    reg r_t r_imag_buf;
-    reg r_t r_dN_real_buf;
-    reg r_t r_dN_imag_buf;
+    r_t r_real_buf;
+    r_t r_imag_buf;
+    r_t r_dN_real_buf;
+    r_t r_dN_imag_buf;
 
     // 將 Buffer 連接到 Output Ports
     assign r_real    = r_real_buf;

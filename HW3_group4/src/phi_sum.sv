@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-`include "include/data_type.svh"
+`include "../include/data_type.svh"
 
 module phi_sum(
     input           clk,
@@ -23,9 +23,9 @@ parameter L = 16;
 integer i;
 
 // Register Definitions
-reg phi_t delay_line [0:L-1];
-reg phi_t energy_to_sum;
-reg phi_t phi_out_buf;
+phi_t delay_line [0:L-1];
+phi_t energy_to_sum;
+phi_t phi_out_buf;
 
 assign phi_out = phi_out_buf;
 

@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-`include "include/data_type.svh"
+`include "../include/data_type.svh"
 // 假設裡面有：
 // typedef logic signed [15:0] gamma_t; // Q6.10
 // typedef logic signed [15:0] mag_t;   // Q6.10
@@ -74,6 +74,7 @@ module mag (
     logic signed [15:0] alpha, beta;    // from LUT
     logic signed [31:0] prod_ax, prod_ay, sum_prod;
     mag_t               mag_next;
+    logic signed [25:0] num;
 
     // ------------------------------------------------------------
     // 組合邏輯：計算 mag_next
@@ -107,7 +108,8 @@ module mag (
         end else begin
             // 3) ratio r = min/max，量化成 Q0.10
             //    r ≈ (min * 2^F_RATIO) / max
-            r = ( (logic [25:0])(min_val <<< F_RATIO) ) / max_val;
+            num = min_val <<< F_RATIO;
+            r   = num / max_val;
 
             // 4) 根據 r 所在區間選 alpha, beta
             if (r < SEG0) begin
