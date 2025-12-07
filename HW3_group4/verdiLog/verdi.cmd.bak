@@ -1,0 +1,13 @@
+verdiSetActWin -dock widgetDock_<Decl._Tree>
+wvCreateWindow
+wvOpenFile -win $_nWave2 {/home/N96134/csplab/HW3/csplab/HW3_group4/top.fsdb}
+verdiSetActWin -win $_nWave2
+verdiWindowResize -win $_Verdi_1 "510" "670" "900" "700"
+verdiSetActWin -dock widgetDock_MTB_SOURCE_TAB_1
+verdiSetActWin -win $_nWave2
+verdiDockWidgetSetCurTab -dock windowDock_OneSearch
+verdiSetActWin -win $_OneSearch
+verdiDockWidgetSetCurTab -dock windowDock_nWave_2
+verdiSetActWin -win $_nWave2
+wvCreateWindow
+verdiSetActWin -win $_nWave3

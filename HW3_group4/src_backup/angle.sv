@@ -105,25 +105,34 @@ module angle (
         if (rst) begin
             angle_valid <= 1'b0;
             valid_pipe  <= '0;
-            ang_out     <= '0;
+            ang_out     <= 0;
             for (i = 0; i < DLY; i = i + 1) begin
-                dly_reg[i] <= '0;
+                dly_reg[i] <= 0;
             end
-        end else begin
-        // ❶ data pipeline：每拍都 shift
-            for (i = DLY-1; i > 0; i = i - 1) begin
-                dly_reg[i] <= dly_reg[i-1];
+        end 
+        else begin
+            if (gamma_sum_valid) begin
+                // 1. Data Pipeline Shift
+                for (i = DLY-1; i > 0; i = i - 1) begin
+                    dly_reg[i] <= dly_reg[i-1];
+                end
+                dly_reg[0] <= ang_now;
+
+                // 2. Valid Pipeline Shift
+                // 移入 '1' 代表這筆資料是有效的，用來計算 Latency
+                valid_pipe <= {valid_pipe[DLY-2:0], 1'b1};
+
+                // 3. Output Update
+                // 只有當管線最尾端有值 (valid_pipe[DLY-1] == 1) 時，才輸出 valid
+                ang_out     <= dly_reg[DLY-1];
+                angle_valid <= valid_pipe[DLY-1]; 
+            end 
+            else begin
+                // Stall Mode:
+                // 保持 delay_line 內容不變，但輸出 valid 拉低以暫停後級
+                angle_valid <= 1'b0;
             end
-            dly_reg[0] <= ang_now;
-
-        // ❷ valid pipeline：每拍都 shift，灌入 gamma_sum_valid
-            valid_pipe <= {valid_pipe[DLY-2:0], gamma_sum_valid};
-
-        // ❸ output：尾端資料 + 對齊過的 valid
-            ang_out     <= dly_reg[DLY-1];
-            angle_valid <= valid_pipe[DLY-1];
         end
-end
-
+    end
 
 endmodule
