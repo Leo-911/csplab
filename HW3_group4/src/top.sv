@@ -93,7 +93,7 @@ always @(posedge clk or posedge rst) begin
         out_valid_r <= 1'b0;
 
         if (select_eps_valid) begin
-            if (valid_cnt == BLOCK_LEN-1) begin
+            if (valid_cnt == BLOCK_LEN-2) begin
                 // 第 BLOCK_LEN 次 valid：拉高 out_valid 一個 clock，並清除計數
                 out_valid_r <= 1'b1;
                 valid_cnt   <= '0;

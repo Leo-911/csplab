@@ -14,10 +14,11 @@ module select_eps (
 );
 
     // 常數：1/(2*pi) ≈ 0.15915494309189533577
-    localparam logic [19:0] INV_TWO_PI = 20'd4189;  // Q13 fixed-point
+    localparam logic [19:0] INV_TWO_PI = 20'd1311;  // Q13 fixed-point
 
     logic [7:0]                  read_ptr;
     logic signed [32:0]          mult_result;
+    ang_t                        e_ang;
 
     always_comb begin
         // 預設值（避免 latch）
@@ -30,8 +31,10 @@ module select_eps (
 
         // 只有兩個 valid 都為 1 時，才真正計算並拉高 select_eps_valid
         if (buf_valid && argmax_valid) begin
-            mult_result      = angle_buf[read_ptr] * INV_TWO_PI;
-            eps_out          = mult_result[24:4];   // 選擇 fixed-point slice
+            mult_result      = $signed(angle_buf[read_ptr]) * $signed(INV_TWO_PI);
+            e_ang  =  angle_buf[read_ptr]; 
+       // Q3.23 → Q1.20（右移 3 bit）
+            eps_out          = mult_result >>> 3;   // <<< 建議用 >>> 算術右移
             select_eps_valid = 1'b1;
         end
     end
