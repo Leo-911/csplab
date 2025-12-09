@@ -1,62 +1,41 @@
+
 `timescale 1ns/1ps
 `include "../include/data_type.svh"
 
 // 純組合電路，讀 buffer 計算 eps
 module select_eps (
-    // Data Inputs
-    input  ang_t          angle_buf [0:255], // 來自 angle_buffer
-    input  logic   [7:0]  write_ptr,         // 來自 angle_buffer
-    input  theta_t        theta_in,          // 來自 argmax
-    
-    // Control Inputs
-    input  logic          buf_valid,         // 來自 angle_buffer
-    input  logic          argmax_valid,      // 來自 argmax
-
-    // Outputs
+    input  ang_t          angle_buf [0:255],
+    input  logic   [7:0]  write_ptr,
+    input  logic          buf_valid,       // 新增：buf 的 valid
+    input  theta_t        theta_in,
+    input  logic          argmax_valid,    // 新增：argmax 的 valid
     output eps_t          eps_out,
-    output reg            select_eps_valid   // 輸出給 top (控制 out_valid)
+    output logic          select_eps_valid // 新增：本 module 的 valid
 );
 
-    // ------------------------------------------------------------
-    // Parameters
-    // ------------------------------------------------------------
-    // 1/(2*pi) ≈ 0.1591549
-    // 您原本設定 4189。假設這是經過系統驗證的常數，維持不變。
-    // 注意：為了正確的 signed 乘法，這裡建議顯式宣告為 signed 或在運算時 cast
-    localparam signed [19:0] INV_TWO_PI = 20'sd4189; 
+    // 常數：1/(2*pi) ≈ 0.15915494309189533577
+    localparam logic [19:0] INV_TWO_PI = 20'd1311;  // Q13 fixed-point
 
-    // ------------------------------------------------------------
-    // Internal Signals
-    // ------------------------------------------------------------
-    logic [7:0]         read_ptr;
-    logic signed [32:0] mult_result;
+    logic [7:0]                  read_ptr;
+    logic signed [32:0]          mult_result;
+    ang_t                        e_ang;
 
-    // ------------------------------------------------------------
-    // Combinational Logic
-    // ------------------------------------------------------------
-    always @(*) begin
-        // 1. Calculate Read Pointer
-        // write_ptr 指向"下一個空位"，所以最新資料在 write_ptr - 1
-        // theta_in = 255 (最新) -> 應讀取 write_ptr - 1
-        // theta_in = 0   (最舊) -> 應讀取 write_ptr - 1 - 255 = write_ptr
-        // 公式簡化為: read_ptr = write_ptr + theta_in (利用 8-bit overflow 特性)
-        read_ptr = write_ptr + theta_in;
+    always_comb begin
+        // 預設值（避免 latch）
+        select_eps_valid = 1'b0;
+        eps_out          = '0;
+        mult_result      = '0;
 
-        // 2. Logic & Valid Generation
+        // 讀取位置先一律算好（不影響正確性）
+        read_ptr = (write_ptr - (8'd255 - theta_in)) & 8'hFF;
+
+        // 只有兩個 valid 都為 1 時，才真正計算並拉高 select_eps_valid
         if (buf_valid && argmax_valid) begin
-            // 執行乘法：ang_t (Q3.10) * INV (Q?)
-            mult_result = angle_buf[read_ptr] * INV_TWO_PI;
-            
-            // 截斷輸出
-            // 原代碼 mult_result[24:4] -> 21 bits
-            eps_out = mult_result[24:4];
-            
+            mult_result      = $signed(angle_buf[read_ptr]) * $signed(INV_TWO_PI);
+            e_ang  =  angle_buf[read_ptr]; 
+       // Q3.23 → Q1.20（右移 3 bit）
+            eps_out          = mult_result >>> 3;   // <<< 建議用 >>> 算術右移
             select_eps_valid = 1'b1;
-        end 
-        else begin
-            mult_result      = '0;
-            eps_out          = '0;
-            select_eps_valid = 1'b0;
         end
     end
 

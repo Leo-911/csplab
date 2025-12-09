@@ -69,8 +69,8 @@ wire eps_t  eps_out;
 wire select_eps_valid;
 
 // buf output
-wire ang_t angle_buf [0:255];
-wire [7:0] write_ptr;
+wire ang_t angle_buf [255:0];
+wire [7:0] write_ptr  ;
 wire buf_valid;
 
 // ---- 計算拉高 out_valid 的時機 ----
@@ -198,7 +198,7 @@ argmax u_argmax(
     .theta_out(theta_out)
 );
 
-angle_buffer u_buf(
+buff u_buf(
     .clk(clk),
     .rst(rst),
     .angle_valid(angle_valid),  //in
