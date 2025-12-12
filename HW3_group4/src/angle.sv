@@ -18,7 +18,7 @@ module angle (
     // CORDIC Parameters
     // ------------------------------------------------------------
     localparam int ITERS = 8;     // Iterations
-    localparam int DLY   = 8;     // Delay Line Length
+    localparam int DLY   = 9;     // Delay Line Length
 
     // Constants (Q3.10 based on ang_t logic signed [12:0])
     // PI/2 = 1.5708 * 1024 = 1608

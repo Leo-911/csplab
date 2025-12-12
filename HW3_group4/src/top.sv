@@ -106,8 +106,8 @@ always @(posedge clk or posedge rst) begin
     end
 end
 
-assign out_valid = out_valid_r;
-//assign  out_valid = select_eps_valid;
+//assign out_valid = out_valid_r;
+assign  out_valid = select_eps_valid;
 
 assign theta = theta_out;
 assign epsilon = eps_out;
