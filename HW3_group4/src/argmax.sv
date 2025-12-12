@@ -47,7 +47,7 @@ module argmax (
             for (int i = 0; i < N; i++) begin
                 data_buffer[i] <= 16'sd0; 
             end
-        end else if (minus_valid && warmup_done) begin
+        end else if (minus_valid &&  (warmup_done || (warmup_cnt == WARMUP-1)) ) begin
             // 暖機完成後，才真正把 lambda 放進 window
             for (int i = N-1; i > 0; i--) begin
                 data_buffer[i] <= data_buffer[i-1];

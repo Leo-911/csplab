@@ -109,7 +109,13 @@ end
 //assign out_valid = out_valid_r;
 assign  out_valid = select_eps_valid;
 
-assign theta = theta_out;
+//assign theta = theta_out;
+assign theta =
+    (theta_out == 8'd0)   ? 8'd0   :
+    (theta_out == 8'd255) ? 8'd255 :
+                            (theta_out + 8'd1);
+
+
 assign epsilon = eps_out;
 
 delay_n u_delay_n(

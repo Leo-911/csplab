@@ -1,4 +1,4 @@
 Command Line: /usr/cad/synopsys/verdi/2024.09-sp2/platform/LINUXAMD64/bin/Novas -ssf top.fsdb
 uname(Linux vlsilab.es.ncku.edu.tw 3.10.0-1160.119.1.el7.x86_64 #1 SMP Tue Jun 4 14:43:51 UTC 2024 x86_64)
 Disabled AskUser2 Message (Response 0): Close all windows and exit verdi?
-au time 21.313984 2.551365 0.203884 delta 140349440 140349440 total 1127313408 1127313408
+au time 384.071610 4.283790 1.251450 delta 139956224 139956224 total 1126920192 1126920192

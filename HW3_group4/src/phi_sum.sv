@@ -30,8 +30,8 @@ phi_t phi_out_buf;
 assign phi_out = phi_out_buf;
 
 // ---------- 運算中間變數 ----------
-reg signed [31:0] temp_rk_sq;
-reg signed [31:0] temp_rkmN_sq;
+reg signed [32:0] temp_rk_sq;
+reg signed [32:0] temp_rkmN_sq;
 reg signed [31:0] temp_rk_sq_shift;
 reg signed [31:0] temp_rkmN_sq_shift;
 reg signed [15:0] r_k_sq;
@@ -43,8 +43,8 @@ reg signed [15:0] r_kmN_sq;
 // -----------------------------------------------------------
 always @(*) begin
     // A. 計算平方 (假設輸入 Q1.15 -> 結果 Q2.30)
-    temp_rk_sq   = r_k_in_real * r_k_in_real + r_k_in_imag * r_k_in_imag;
-    temp_rkmN_sq = r_k_minus_N_in_real * r_k_minus_N_in_real + r_k_minus_N_in_imag * r_k_minus_N_in_imag;
+    temp_rk_sq   =33'( r_k_in_real) * r_k_in_real + 33'(r_k_in_imag) * r_k_in_imag;
+    temp_rkmN_sq = 33'(r_k_minus_N_in_real) * r_k_minus_N_in_real +33'( r_k_minus_N_in_imag) * r_k_minus_N_in_imag;
 
     // B. Scaling (右移 20 位, Q2.30 -> Q2.10)
     // 這裡保留原有的 Scaling，將 32-bit 的平方和縮小回適合累加的大小
@@ -57,7 +57,7 @@ always @(*) begin
 
     // D. 計算總和 (直接相加，不再乘以 rho)
     // energy_to_sum = |r_k|^2 + |r_{k-N}|^2
-    energy_to_sum = r_k_sq + r_kmN_sq;
+    energy_to_sum = (r_k_sq + r_kmN_sq) >>>1;
 end
 
 // -----------------------------------------------------------

@@ -30,7 +30,7 @@ module phi_rho (
     end
     
     // 為了保持 1 latency 的結構，我們在 register 後接組合邏輯
-    assign prod_shifted  = prod_full >>> 8;
+    assign prod_shifted  = prod_full >>> 7;
     assign rho_phi_q6_10 = prod_shifted[15:0];
     assign phi_rho       = rho_phi_q6_10; // phi_t is 16-bit
 

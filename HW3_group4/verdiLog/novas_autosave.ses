@@ -25,7 +25,7 @@ fdb_proj =
 fdb_campaign = 
 fdb_tool = 
 [hb]
-viewport = 526 189 900 700 0 0 292 898
+viewport = 526 189 900 700 0 0 294 898
 interactiveMode = False
 viewType = Source
 simulatorMode = False
@@ -49,7 +49,7 @@ SourceVerticalScrollLines = 5
 sdfCheckUndef = FALSE
 simFlow = FALSE
 [wave.0]
-viewPort = 0 25 900 319 100 65
+viewPort = 0 25 900 321 100 65
 primaryWindow = TRUE
 Empty = /home/N96134/csplab/HW3/csplab/HW3_group4/verdiLog/novas_autosave.ses.wave.0
 displayGrid = FALSE
