@@ -1,42 +1,33 @@
-
 `timescale 1ns/1ps
 `include "../include/data_type.svh"
 
-// 純組合電路，讀 buffer 計算 eps
+// 純組合：把輸入 ang (Q3.10) 轉成 eps (Q1.20) = ang / (2*pi)
 module select_eps (
-    input  ang_t          angle_buf [0:255],
-    input  logic   [7:0]  write_ptr,
-    input  logic          buf_valid,       // 新增：buf 的 valid
-    input  theta_t        theta_in,
-    input  logic          argmax_valid,    // 新增：argmax 的 valid
-    output eps_t          eps_out,
-    output logic          select_eps_valid // 新增：本 module 的 valid
+    input  ang_t  ang_in,          // 從 argmax 出來的 angle (Q3.10)
+    input  logic  argmax_valid,    // 這一拍的 ang_in 是否有效
+
+    output eps_t  eps_out,         // Q1.20
+    output logic  select_eps_valid // eps_out 是否有效
 );
+    // 1/(2*pi) ≈ 0.159154...，這裡用 Q13 量化 -> 20-bit
+    localparam logic [19:0] INV_TWO_PI = 20'd1311;  // Q0.13 / Q13 fixed-point
 
-    // 常數：1/(2*pi) ≈ 0.15915494309189533577
-    localparam logic [19:0] INV_TWO_PI = 20'd1311;  // Q13 fixed-point
-
-    logic [7:0]                  read_ptr;
-    logic signed [32:0]          mult_result;
-    ang_t                        e_ang;
+    // ang_t (13bit, Q3.10) × INV_TWO_PI (20bit, Q0.13)
+    // => Q3.23，用 33 bits 裝
+    logic signed [32:0] mult_result;
 
     always_comb begin
-        // 預設值（避免 latch）
-        select_eps_valid = 1'b0;
-        eps_out          = '0;
+        // 預設
         mult_result      = '0;
+        eps_out          = '0;
+        select_eps_valid = 1'b0;
 
-        // 讀取位置先一律算好（不影響正確性）
-        read_ptr = (write_ptr - (8'd255 - theta_in)) & 8'hFF;
-
-        // 只有兩個 valid 都為 1 時，才真正計算並拉高 select_eps_valid
-        if (buf_valid && argmax_valid) begin
-            mult_result      = $signed(angle_buf[read_ptr]) * $signed(INV_TWO_PI);
-            e_ang  =  angle_buf[read_ptr]; 
-       // Q3.23 → Q1.20（右移 3 bit）
-            eps_out          = mult_result >>> 3;   // <<< 建議用 >>> 算術右移
+        if (argmax_valid) begin
+            mult_result = $signed(ang_in) * $signed(INV_TWO_PI);
+            // Q3.23 -> Q1.20，右移 3 bits（保留低 21 bits 給 eps_t）
+            eps_out          = mult_result >>> 3;
             select_eps_valid = 1'b1;
         end
     end
-
 endmodule
+

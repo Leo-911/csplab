@@ -8,7 +8,7 @@
 `include "angle.sv"
 `include "mag.sv"
 `include "argmax.sv"
-`include "buf.sv"
+
 `include "select_eps.sv"
 
 module top#(
@@ -62,16 +62,12 @@ wire minus_valid;
 
 // argmax output
 wire theta_t  theta_out;
+wire ang_t arg_ang;
 wire argmax_valid;
 
 // select_eps output
 wire eps_t  eps_out;
 wire select_eps_valid;
-
-// buf output
-wire ang_t angle_buf [255:0];
-wire [7:0] write_ptr  ;
-wire buf_valid;
 
 // ---- 計算拉高 out_valid 的時機 ----
 parameter N = 256;
@@ -109,11 +105,11 @@ end
 //assign out_valid = out_valid_r;
 assign  out_valid = select_eps_valid;
 
-//assign theta = theta_out;
-assign theta =
-    (theta_out == 8'd0)   ? 8'd0   :
-    (theta_out == 8'd255) ? 8'd255 :
-                            (theta_out + 8'd1);
+assign theta = theta_out;
+//  assign theta =
+//    (theta_out == 8'd0)   ? 8'd0   :
+//    (theta_out == 8'd255) ? 8'd255 :
+//                            (theta_out + 8'd1);
 
 
 assign epsilon = eps_out;
@@ -200,25 +196,14 @@ argmax u_argmax(
     .rst(rst),
     .minus_valid(minus_valid),  //in
     .lambda(lambda_out),
+    .ang_in(ang_out),
     .argmax_valid(argmax_valid),    //out
+    .angle_out(arg_ang),
     .theta_out(theta_out)
 );
 
-buff u_buf(
-    .clk(clk),
-    .rst(rst),
-    .angle_valid(angle_valid),  //in
-    .ang_in(ang_out),
-    .buf_valid(buf_valid),  //out
-    .angle_buf(angle_buf),
-    .write_ptr(write_ptr)
-);
-
 select_eps u_select_eps(
-    .angle_buf(angle_buf),
-    .write_ptr(write_ptr),
-    .buf_valid(buf_valid),  //in
-    .theta_in(theta_out),
+    .ang_in(arg_ang),
     .argmax_valid(argmax_valid), //in
     .select_eps_valid(select_eps_valid), //out
     .eps_out(eps_out)
