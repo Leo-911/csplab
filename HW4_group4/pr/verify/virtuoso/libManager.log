@@ -1,0 +1,29 @@
+\o Program:		@(#)$CDS: libManager version 6.1.8 - CAT37 03/31/2021 15:41 (sjfdcl1031) $
+\o Sub version:		sub-version  s184 
+\o Arguments:		-unmapped -mpssession virtuoso25615 -mpshost superdome2 
+\o Working Directory:	superdome2:/home/user1/DICD25/DICD2502/groupx_2_apr2/pr/verify/virtuoso
+\o 64-bit offsets
+\o Qt version: 		5.9.1
+\o changeWorkingDir("/home/user1/DICD25/DICD2502/groupx_2_apr2/pr/verify/virtuoso") unnecessary.
+\o ddSetForcedLib("") unnecessary.
+\o Log file is "/home/user1/DICD25/DICD2502/groupx_2_apr2/pr/verify/virtuoso/libManager.log".
+\o Opening libManager window.
+\a nrSetWindowVisibility(cdsLibManager "show")
+\o MPS service: map window
+\o Library Manager customization server connected.
+\a nrSetCurrentWindow(cdsLibManager)
+\a nrResizeWindow(cdsLibManager list(950 354 602 491))
+\a _lmSetFilter( 'library "CHIP")
+\a cdsLibManager->libComboFilter->value = ""
+\a _lmSetFilter( 'library "")
+\a cdsLibManager->libLineEdit->value = "CHIP"
+\a nrSetWindowVisibility(cdsLibManager "hide")
+\a _lmgrCloseIconify("cdsLibManager" 1)
+\a nrSetWindowVisibility(cdsLibManager "show")
+\a _lmgrCloseIconify("cdsLibManager" 0)
+\a nrSetWindowVisibility(cdsLibManager "hide")
+\a _lmgrCloseIconify("cdsLibManager" 1)
+\a cdsLibManager->libLineEdit->value = ""
+\o MPS service: shutdown
+\o libManager is exiting.
+\a exit(0)

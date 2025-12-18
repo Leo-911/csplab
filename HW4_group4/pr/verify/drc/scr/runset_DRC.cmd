@@ -1,0 +1,12 @@
+LAYOUT SYSTEM GDS
+LAYOUT PATH "../add_dummy/CHIP_adddummmy.gds.gz"
+LAYOUT PRIMARY "CHIP"
+
+DRC RESULTS DATABASE "output/DRC_RES.db"
+DRC SUMMARY REPORT "output/DRC.rep"  // HIER
+
+VARIABLE VDD_TEXT "?VDD?"
+
+DRC ICSTATION YES
+include ./scr/LOGIC_TopMu_DRC
+

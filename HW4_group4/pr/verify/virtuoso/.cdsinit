@@ -1,0 +1,2 @@
+setSkillPath(" . ~ /cad/mentor/calibre/cur/shared/pkgs/icv/tools/queryskl")
+load("calibre.OA.skl")

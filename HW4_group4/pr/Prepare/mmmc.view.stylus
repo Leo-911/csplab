@@ -1,0 +1,57 @@
+create_library_set -name lib_ff0p88v125c -timing\
+    {
+    /usr/cad/CBDK/Executable_Package/Collaterals/IP/stdcell/N16ADFP_StdCell/CCS/N16ADFP_StdCellff0p88v125c_ccs.lib
+    /usr/cad/CBDK/Executable_Package/Collaterals/IP/stdio/N16ADFP_StdIO/NLDM/N16ADFP_StdIOff0p88v1p98v125c.lib
+    }
+create_library_set -name lib_ss0p72v125c -timing\
+    {
+    /usr/cad/CBDK/Executable_Package/Collaterals/IP/stdcell/N16ADFP_StdCell/CCS/N16ADFP_StdCellss0p72v125c_ccs.lib
+    /usr/cad/CBDK/Executable_Package/Collaterals/IP/stdio/N16ADFP_StdIO/NLDM/N16ADFP_StdIOss0p72v1p62v125c.lib
+    }
+create_library_set -name lib_ff0p88vm40c -timing\
+    {
+    /usr/cad/CBDK/Executable_Package/Collaterals/IP/stdcell/N16ADFP_StdCell/CCS/N16ADFP_StdCellff0p88vm40c_ccs.lib
+    /usr/cad/CBDK/Executable_Package/Collaterals/IP/stdio/N16ADFP_StdIO/NLDM/N16ADFP_StdIOff0p88v1p98vm40c.lib
+    }
+create_library_set -name lib_ss0p72vm40c -timing\
+    {
+    /usr/cad/CBDK/Executable_Package/Collaterals/IP/stdcell/N16ADFP_StdCell/CCS/N16ADFP_StdCellss0p72vm40c_ccs.lib
+    /usr/cad/CBDK/Executable_Package/Collaterals/IP/stdio/N16ADFP_StdIO/NLDM/N16ADFP_StdIOss0p72v1p62vm40c.lib
+    }
+
+create_timing_condition -name TC_ss0p72v125c -library_sets lib_ss0p72v125c
+create_timing_condition -name TC_ff0p88vm40c -library_sets lib_ff0p88vm40c
+create_timing_condition -name TC_ss0p72vm40c -library_sets lib_ss0p72vm40c
+create_timing_condition -name TC_ff0p88v125c -library_sets lib_ff0p88v125c
+
+create_rc_corner -name RC_best\
+   -pre_route_res 1\
+   -post_route_res 1\
+   -pre_route_cap 1\
+   -post_route_cap 1\
+   -post_route_cross_cap 1\
+   -pre_route_clock_res 0\
+   -pre_route_clock_cap 0\
+   -qrc_tech /usr/cad/CBDK/Executable_Package/Collaterals/Tech/RC/N16ADFP_QRC/best/qrcTechFile
+create_rc_corner -name RC_worst\
+   -pre_route_res 1\
+   -post_route_res 1\
+   -pre_route_cap 1\
+   -post_route_cap 1\
+   -post_route_cross_cap 1\
+   -pre_route_clock_res 0\
+   -pre_route_clock_cap 0\
+   -qrc_tech /usr/cad/CBDK/Executable_Package/Collaterals/Tech/RC/N16ADFP_QRC/worst/qrcTechFile
+
+create_delay_corner -name DC_ff0p88v125c -timing_condition {TC_ff0p88v125c} -rc_corner RC_best
+create_delay_corner -name DC_ss0p72v125c -timing_condition {TC_ss0p72v125c} -rc_corner RC_worst
+create_delay_corner -name DC_ff0p88vm40c -timing_condition {TC_ff0p88vm40c} -rc_corner RC_best
+create_delay_corner -name DC_ss0p72vm40c -timing_condition {TC_ss0p72vm40c} -rc_corner RC_worst
+
+create_constraint_mode -name CM_func -sdc_files ../Prepare/CHIP.sdc
+
+create_analysis_view -name AV_func_ss0p72v125c -constraint_mode CM_func -delay_corner DC_ss0p72v125c
+create_analysis_view -name AV_func_ff0p88v125c -constraint_mode CM_func -delay_corner DC_ff0p88v125c
+create_analysis_view -name AV_func_ss0p72vm40c -constraint_mode CM_func -delay_corner DC_ss0p72vm40c
+create_analysis_view -name AV_func_ff0p88vm40c -constraint_mode CM_func -delay_corner DC_ff0p88vm40c
+set_analysis_view -setup {AV_func_ss0p72v125c AV_func_ss0p72vm40c} -hold {AV_func_ss0p72v125c AV_func_ss0p72vm40c AV_func_ff0p88v125c AV_func_ff0p88vm40c} -leakage AV_func_ff0p88v125c -dynamic AV_func_ff0p88v125c
