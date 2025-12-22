@@ -62,11 +62,11 @@ endgenerate
 
 //bottom        // rho, theta, out_valid (17pin)
 generate
-    for(i=0; i<8; i=i+1) begin : rho
+    for(i=0; i<8; i=i+1) begin : rho_pad
         PDCDG_V ipad_rho (.C(rho_core[i]), .I(1'b0), .IE(1'b1), .OEN(1'b1), .PAD(rho[i]));
     end
 
-    for(i=0; i<8; i=i+1) begin : theta
+    for(i=0; i<8; i=i+1) begin : theta_pad
         PDCDG_V opad_theta (.C(), .I(theta_core[i]), .IE(1'b0), .OEN(1'b0), .PAD(theta[i]));
     end
 endgenerate
@@ -78,5 +78,6 @@ generate
         PDCDG_H opad_eps (.C(), .I(epsilon_core[i]), .IE(1'b0), .OEN(1'b0), .PAD(epsilon[i]));
     end
 endgenerate
+
 
 endmodule
